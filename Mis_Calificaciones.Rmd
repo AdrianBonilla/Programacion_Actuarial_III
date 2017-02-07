@@ -1,0 +1,41 @@
+---
+title: "Mis Calificaciones"
+author: "Julio Adrian Bonilla Alarcon"
+date: "6 de febrero de 2017"
+output: html_document
+---
+#Primer semestre 
+##(Primavera 2016)*
+
+Matematicas Basicas *9*
+
+Problemas de Matematicas *9*
+
+Conceptos de Calculo *8*
+
+Programacion I *8*
+
+Intoduccion a la profesion Actuarial *5*
+
+DHPC *10*
+
+#Segundo Semestre
+##(Otoño 2016)
+
+Calculo Diferencial *5*
+
+Programacion II *6*
+
+Introduccion a la profesion actuarial *5*
+
+Teoria de ecuaciones *6*
+
+Teoria del interes I *8*
+
+Microeconomia *8*
+
+
+
+
+
+
