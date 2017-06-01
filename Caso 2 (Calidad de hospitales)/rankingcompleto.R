@@ -1,33 +1,70 @@
-rankingcompleto <- function(resultado="infarto",num="mejor"){
+rankcompletos <- function(resultado="falla",num="1"){
+num3<-num
+vc<-read.csv("outcome-of-care-measures.csv", colClasses = "character") 
+estados2<-levels(factor(vc[,7]))
+num2 <- num3
+hospitales<- vector("character")
+for(bc in 1:54){
+estado <- estados2[bc]
+num <- num2
+{
+    if(resultado !="neumonÃ­a" & resultado!="falla" & resultado !="infarto"){
+        stop("resultado invalido")
+    }
+    
+    assign("data",read.csv("outcome-of-care-measures.csv"))
+    #Revision de la validez de estado y resultado
+    assign("estados",levels(data[,7])[data[,7]])
+    #Columnas de los codigos de estado 
+    assign("Codigoes",FALSE)
+    for(i in 1:length(estados)){
+        if(estado==estados[i]){
+            assign("Codigoes",TRUE)
+        }
+    }
+    if (!Codigoes){
+        stop("estadoinvalido")
+    }
+    {  
+    #Dividimos la base de datos 
     assign("dato" ,read.csv("outcome-of-care-measures.csv", colClasses = "character")) 
-    #options(warn = -1)#Ignora las advertencias
+    options(warn = -1)#Ignora las advertencias
     if(resultado == "infarto"){
         assign("x",split(dato[c(2,7,11)],dato[c(2,7,11)]$State))
     }else if(resultado=="falla"){  
         assign("x",split(dato[c(2,7,17)],dato[c(2,7,17)]$State))
-    }else if(resultado=="neumonía"){
+    }else if(resultado=="neumonÃ­a"){
         assign("x",split(dato[c(2,7,23)],dato[c(2,7,23)]$State))
+    }else{
+        print(NA)
     }
-    assign("Hospital",c())
-    for(j in 1:54){
-        assign("H",x[j][[1]][,1]); assign("Rate",as.numeric(x[j][[1]][,3]))
-        assign("u", na.omit(data.frame(H,Rate)))
-        assign("e", with(u,order(Rate,H)))
-        assign("u",u[e,][1]); assign("t",nrow(u))
-        if(num=="mejor"){
-           assign ("Hospital",c(Hospital,as.character(u[1,1])))
-        }else if(num=="peor"){
-           assign("Hospital",c(Hospital,as.character(u[t,1])))
-        }else if(0<num & num<=t ){
-           assign("Hospital",c(Hospital,as.character(u[num,1])))
-        }else if (t<num){
-           assign("Hospital",c(Hospital,as.character(u[t+1,1])))
-        } 
+    #Extrae la columna de los hospitales del estado y taza de mortalidad en un valor numerico
+    assign("Hospital",x[estado][[estado]][,1]); assign("Rate",as.numeric(x[estado][[estado]][,3]))
+    #Hace un data frame con los hospitales y la taza de mortalidad y excluye los vacios
+    assign("u",na.omit(data.frame(Hospital,Rate)))
+    #Ordenamos de alfabeticamente 
+    assign ("ordenador",with(u,order(Rate,Hospital)))
+    assign("z"  ,u[ordenador,]);assign("t",nrow(u))
+    #guardamos en un data frame y sacamos el ranking 
+    assign("basededatos",data.frame(z,rank=1:t))
+    #Validacion numerica 
+    if(num=="mejor"){
+        a<-head(basededatos,1)
+    }else if(num=="peor"){
+        a<-tail(head(basededatos,t),1)
+    }else if (0<num & num<=t){
+        a<-tail(head(basededatos,num),1)
+    }else if(t<num){
+        print("Error")
+        
     }
-    assign("Estado",sort(unique(dato$State)))
-    data.frame(Hospital,Estado)
+    }
+    
+    
+    
 }
-
-head(rankingcompleto("infarto",20),10)
-tail(rankingcompleto("neumonía","peor"),3)
-tail(rankingcompleto("falla","mejor"),10)
+a<-as.character(a[1,1])
+hospitales<- c(hospitales,a)    
+}    
+data.frame(hospitales,estados2)
+}
