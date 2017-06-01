@@ -63,7 +63,7 @@ m
 y<-data.frame(a=1,b="a")
 dput(y)
 dput(y,"y.R")
-dget
+dget("y.R")
 y<-dget("y.R")
 
 
